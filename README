@@ -1,0 +1,6 @@
+Basically there is just one function:
+
+	GenImpl()
+
+Simply go to a prototype in your header file that you would like to generate a corresponding implementation for and call GenImpl(). This will attempt to switch to your .cpp buffer and append the definition.
+
