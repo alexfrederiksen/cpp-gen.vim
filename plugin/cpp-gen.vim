@@ -5,6 +5,7 @@ function ScopeEncloses(targetLine)
 	" Test if class was only prototyped
 	call search(";")
 	if currentLine == line(".")
+		call setpos(".", savepos)
 		return 0
 	endif
 
@@ -15,8 +16,7 @@ function ScopeEncloses(targetLine)
 	let end = line(".")
 
 	call setpos(".", savepos)
-	"heck
-	"heck
+
 	if a:targetLine >= start && a:targetLine <= end
 		return 1
 	endif
@@ -25,8 +25,6 @@ endfunction
 
 " Construct a definition using focused declaration
 function GetDef()
-	set iskeyword+=~
-
 	let savepos = getpos(".")
 
 	" Find args
@@ -35,7 +33,7 @@ function GetDef()
 	let args = @a
 
 	" Find name
-	normal! $F)%b"ayw
+	normal! $F)%B"ayt(
 	let name = @a
 
 	" Find prefix
@@ -101,6 +99,7 @@ function GotoDef()
 	let sourceName = expand('%:t:r') . ".cpp"
 	if bufexists(sourceName) <= 0
 		echo "Source file not loaded: " . sourceName
+		return 0
 	else
 		" Get the generated code (escape ~ cuz yea)
 		let generated = escape(GetDef(), '~*/.[]')
@@ -115,7 +114,27 @@ function GotoDef()
 			echo "Definition could not be found. /:"
 			" Switch back
 			execute "sbuffer " . headerName
+			return 0
 		endif
 	endif
+
+	return 1
+
+endfunction
+
+" TODO: Unfinished
+function StartEditDef()
+	let headerName = @%
+	let foundDef = GotoDef()
+	if foundDef
+		normal! dd
+		execute "sbuffer " . headerName
+
+		echo "Editing definition..."
+	endif
+endfunction
+
+" TODO: Unfinished
+function StopEditDef()
 
 endfunction
