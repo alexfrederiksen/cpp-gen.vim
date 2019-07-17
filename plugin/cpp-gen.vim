@@ -57,7 +57,7 @@ function GetDef()
 			break
 		endif
 
-		normal! w"ayw
+		normal! wve"ay
 		normal! b
 		let className = @a
 		if ScopeEncloses(targetLine)
