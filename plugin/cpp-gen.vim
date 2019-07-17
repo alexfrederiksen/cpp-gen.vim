@@ -43,11 +43,16 @@ function GetDef()
 		let prefix = prefix . " "
 	endif
 
-	" Find class name
+	" Find postfix
+	normal! $F)"ayt;
+	let postfix = @a[1:]
+
+
+	" Find class names
 	let targetLine = line(".")
 	let classNames = ""
 	while 1
-		let classLine = search("class", "bW")
+		let classLine = search('class\|struct\|namespace', "bW")
 		if classLine == 0
 			break
 		endif
@@ -63,7 +68,7 @@ function GetDef()
 
 
 
-	let generated = prefix . classNames . name . "(" . args . ")\n{\n}"
+	let generated = prefix . classNames . name . "(" . args . ")" . postfix . "\n{\n}"
 	call setpos(".", savepos)
 
 	return generated
